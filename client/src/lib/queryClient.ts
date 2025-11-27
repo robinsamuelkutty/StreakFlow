@@ -29,7 +29,14 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const res = await fetch(queryKey.join("/") as string, {
+    const [baseUrl, ...params] = queryKey as string[];
+    let url = baseUrl;
+    
+    if (params.length > 0 && !baseUrl.includes("?")) {
+      url = `${baseUrl}?date=${params[0]}`;
+    }
+    
+    const res = await fetch(url, {
       credentials: "include",
     });
 
